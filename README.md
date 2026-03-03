@@ -85,3 +85,49 @@ You can use the app at:
 * Can view approved placement drives.
 * Can apply for placement drives.
 * Can view application status and placement history. 
+
+---
+
+### Key Terminologies
+
+- 🧑‍💼 **Admin**  
+  A user with highest level of access who manages companies, sudents, and placement activities.
+
+- 🧑 **Student**  
+  A user who applies for placement drives and participates in recruitment activities.
+  
+- 👤 **Company**  
+ An organization registered in the system that conducts placement drives and recruits students.
+
+- 📅 **Placement Drive**  
+  A recruitment drive created by a company.
+  - Attributes:
+    * Drive ID
+    * Comapny ID
+    * Job Title
+    * Job Description
+    * Eligibility Criteria
+    * Application Deadline
+    * Status (Pending/Approved/Closed)
+    * Extra Fields
+
+- 📝 **Application**  
+  A record of a student applying to a palcement drive.
+  - Attributes:
+    * Application ID
+    * Student ID
+    * Drive ID
+    * Application Date
+    * Status (Applied / Shortlisted / Selected / Rejected)
+    * Extra fields
+
+- 📝 **Company Profile**  
+  Details of a registered company.
+  - Attributes:
+    * Company ID
+    * Company Name
+    * HR Contact
+    * Website
+    * Approval Status
+    * Extra fields
+---
