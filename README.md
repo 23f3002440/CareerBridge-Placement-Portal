@@ -2,8 +2,6 @@
 A full-stack Placement Portal developed with Flask, Jinja2, and SQLite implementing role-based authentication and campus recruitment workflow management.
 
 
-# 🚗 Vehicle Parking App V1
-
 **MAD-1 Project May 2026**  
 23f3002440 / CareerBridge- Placement Portal
 
@@ -22,6 +20,23 @@ A full-stack Placement Portal developed with Flask, Jinja2, and SQLite implement
 </div>
 
 ---
+## 📖 Overview
+
+**CareerBridge** is a web-based Placement Portal Application that streamlines the campus recruitment process.
+It enables seamless interaction between **Admin (Institute), Companies, and Students** through role-based access.
+Admins manage users, placement drives, and system data efficiently.
+Companies can post job openings, shortlist candidates, and update recruitment status.
+Students can create profiles, apply for jobs, and track their application progress in real time.
+
+---
+🔹 Benefits:
+
+-Efficient recruitment management<br>
+-Faster communication<br>
+-Centralized data handling<br>
+-Improved placement coordination<br>
+
+---
 
 ## 🛠️ Tech Stack
 
@@ -34,3 +49,39 @@ A full-stack Placement Portal developed with Flask, Jinja2, and SQLite implement
   
 
 ---
+
+
+## 🖥️ Live Demo
+
+You can use the app at:  
+👉 [https://vehicle-parking-app-v1-jnm1.onrender.com/](https://vehicle-parking-app-v1-jnm1.onrender.com/)
+
+> ⚠️ **Note:**  
+> As the app is deployed on Render's free tier, it may take 10-15 minutes to wake up from sleep mode if there's no recent traffic! Please be patient after clicking the link.
+
+---
+
+
+## ✨ Roles & Functionalities
+
+### 🧑‍💼 Admin Dashboard
+
+* Admin is the pre-existing superuser of the application.
+* Can approve or reject company registrations.
+* Can approve or reject placement drives created by the company.
+* Can view and manage all students, companies, and placement drives.
+  - Can edit, delete or blacklist students and comapnies if required.
+* Can search students or companies by name or ID.
+
+### 🧑‍💼 Company
+* Can regsiter and create a company profile.
+* Can log in only after admin approval.
+* Can create placement drives.
+* Can view students applicationss for their drives.
+* Can shorlist students and update application status.
+
+### 🧑 Students
+* Can resiter, log in, and update their profile.
+* Can view approved placement drives.
+* Can apply for placement drives.
+* Can view application status and placement history. 
