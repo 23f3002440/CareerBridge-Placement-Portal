@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Applications</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .container-main {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .header-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-title {
+        color: #667eea;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .header-title i {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+      }
+
+      .tabs-section {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        border-bottom: 2px solid #f0f0f0;
+        overflow-x: auto;
+      }
+
+      .tab-button {
+        background: none;
+        border: none;
+        padding: 12px 20px;
+        cursor: pointer;
+        color: #999;
+        font-weight: bold;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+      }
+
+      .tab-button.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+      }
+
+      .tab-button:hover {
+        color: #667eea;
+      }
+
+      .status-group {
+        margin-bottom: 30px;
+        display: none;
+      }
+
+      .status-group.active {
+        display: block;
+      }
+
+      .group-title {
+        color: #667eea;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f093fb;
+      }
+
+      .application-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .application-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 15px;
+      }
+
+      .job-info {
+        flex: 1;
+      }
+
+      .job-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .company-name {
+        color: #999;
+        font-size: 13px;
+        margin-top: 5px;
+      }
+
+      .status-badge {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+
+      .status-applied {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .status-shortlisted {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+
+      .status-selected {
+        background: #e8f5e9;
+        color: #388e3c;
+      }
+
+      .status-rejected {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .card-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        padding: 15px 0;
+        border-top: 1px solid #f0f0f0;
+        border-bottom: 1px solid #f0f0f0;
+        margin: 15px 0;
+      }
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #666;
+      }
+
+      .detail-item i {
+        color: #764ba2;
+        width: 18px;
+        text-align: center;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+
+      .btn-small {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-view {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-view:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        color: white;
+      }
+
+      .empty-container {
+        background: white;
+        border-radius: 12px;
+        padding: 60px 20px;
+        text-align: center;
+        color: #999;
+      }
+
+      .empty-icon {
+        font-size: 56px;
+        margin-bottom: 20px;
+        color: #ddd;
+      }
+
+      .nav-logout {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .nav-back {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+      }
+
+      .filter-counts {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .count-badge {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      @media (max-width: 600px) {
+        .header-title {
+          font-size: 20px;
+        }
+
+        .card-header {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .card-details {
+          grid-template-columns: 1fr;
+        }
+
+        .tabs-section {
+          margin-left: -5px;
+        }
+
+        .tab-button {
+          padding: 10px 15px;
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav-back">
+      <a href="/student/dashboard" class="btn btn-outline-light">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </div>
+
+    <div class="nav-logout">
+      <a href="/logout" class="btn btn-outline-light">Logout</a>
+    </div>
+
+    <div class="container-main">
+      <!-- Header Section -->
+      <div class="header-section">
+        <div class="header-title">
+          <i class="fas fa-file-alt"></i> My Applications
+        </div>
+        <div class="filter-counts" style="margin-top: 15px">
+          <span style="color: #667eea; font-weight: bold"
+            >Filter by Status:</span
+          >
+          <span class="count-badge"
+            >Applied: {{ status_groups.Applied|length }}</span
+          >
+          <span class="count-badge"
+            >Shortlisted: {{ status_groups.Shortlisted|length }}</span
+          >
+          <span class="count-badge"
+            >Selected: {{ status_groups.Selected|length }}</span
+          >
+          <span class="count-badge"
+            >Rejected: {{ status_groups.Rejected|length }}</span
+          >
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-section">
+          <button class="tab-button active" onclick="showTab('all')">
+            <i class="fas fa-list"></i> All ({{ applications|length }})
+          </button>
+          <button class="tab-button" onclick="showTab('applied')">
+            <i class="fas fa-file"></i> Applied
+          </button>
+          <button class="tab-button" onclick="showTab('shortlisted')">
+            <i class="fas fa-star"></i> Shortlisted
+          </button>
+          <button class="tab-button" onclick="showTab('selected')">
+            <i class="fas fa-check-circle"></i> Selected
+          </button>
+          <button class="tab-button" onclick="showTab('rejected')">
+            <i class="fas fa-times-circle"></i> Rejected
+          </button>
+        </div>
+      </div>
+
+      <!-- All Applications -->
+      <div id="all" class="status-group active">
+        {% if applications %} {% for app in applications %}
+        <div class="application-card">
+          <div class="card-header">
+            <div class="job-info">
+              <div class="job-title">{{ app.job.title }}</div>
+              <div class="company-name">
+                <i class="fas fa-building"></i> {{ app.job.company.company_name
+                }}
+              </div>
+            </div>
+            <span
+              class="status-badge status-{{ app.status|lower|replace(' ', '-') }}"
+            >
+              {{ app.status }}
+            </span>
+          </div>
+
+          <div class="card-details">
+            <div class="detail-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>{{ app.job.location }}</span>
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-money-bill-wave"></i>
+              <span
+                >₹{{ app.job.salary }}{% if app.job.salary_max %}-{{
+                app.job.salary_max }}{% endif %} LPA</span
+              >
+            </div>
+            <div class="detail-item">
+              <i class="fas fa-calendar"></i>
+              <span>Applied: {{ app.applied_at.strftime('%d %b %Y') }}</span>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <a href="/student/job/{{ app.job.id }}" class="btn-small btn-view">
+              <i class="fas fa-eye"></i> View Job Detail
+            </a>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="empty-container">
+          <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+          <p>
+            No applications yet.
+            <a href="/student/jobs" style="color: #667eea; font-weight: bold"
+              >Browse and apply for jobs</a
+            >
+          </p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Applied Applications -->
+      <div id="applied" class="status-group">
+        {% if status_groups.Applied %} {% for app in status_groups.Applied %}
+        <div class="application-card">
+          <div class="card-header">
+            <div class="job-info">
+              <div class="job-title">{{ app.job.title }}</div>
+              <div class="company-name">
+                <i class="fas fa-building"></i> {{ app.job.company.company_name
+                }}
+              </div>
+            </div>
+            <span class="status-badge status-applied">Applied</span>
+          </div>
+          <div class="card-details">
+            <div class="detail-item">
+              <i class="fas fa-calendar"></i>
+              <span>{{ app.applied_at.strftime('%d %b %Y') }}</span>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <a href="/student/job/{{ app.job.id }}" class="btn-small btn-view">
+              <i class="fas fa-eye"></i> View Job
+            </a>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="empty-container">
+          <div class="empty-icon"><i class="fas fa-file"></i></div>
+          <p>No applications in "Applied" status</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Shortlisted Applications -->
+      <div id="shortlisted" class="status-group">
+        {% if status_groups.Shortlisted %} {% for app in
+        status_groups.Shortlisted %}
+        <div class="application-card">
+          <div class="card-header">
+            <div class="job-info">
+              <div class="job-title">{{ app.job.title }}</div>
+              <div class="company-name">
+                <i class="fas fa-building"></i> {{ app.job.company.company_name
+                }}
+              </div>
+            </div>
+            <span class="status-badge status-shortlisted">Shortlisted</span>
+          </div>
+          <div class="action-buttons">
+            <a href="/student/job/{{ app.job.id }}" class="btn-small btn-view">
+              <i class="fas fa-eye"></i> View Job
+            </a>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="empty-container">
+          <div class="empty-icon"><i class="fas fa-star"></i></div>
+          <p>No shortlisted applications yet</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Selected Applications -->
+      <div id="selected" class="status-group">
+        {% if status_groups.Selected %} {% for app in status_groups.Selected %}
+        <div class="application-card">
+          <div class="card-header">
+            <div class="job-info">
+              <div class="job-title">{{ app.job.title }}</div>
+              <div class="company-name">
+                <i class="fas fa-building"></i> {{ app.job.company.company_name
+                }}
+              </div>
+            </div>
+            <span class="status-badge status-selected">Selected</span>
+          </div>
+          <div class="action-buttons">
+            <a href="/student/job/{{ app.job.id }}" class="btn-small btn-view">
+              <i class="fas fa-eye"></i> View Job
+            </a>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="empty-container">
+          <div class="empty-icon"><i class="fas fa-check-circle"></i></div>
+          <p>No selected applications. Keep applying!</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Rejected Applications -->
+      <div id="rejected" class="status-group">
+        {% if status_groups.Rejected %} {% for app in status_groups.Rejected %}
+        <div class="application-card">
+          <div class="card-header">
+            <div class="job-info">
+              <div class="job-title">{{ app.job.title }}</div>
+              <div class="company-name">
+                <i class="fas fa-building"></i> {{ app.job.company.company_name
+                }}
+              </div>
+            </div>
+            <span class="status-badge status-rejected">Rejected</span>
+          </div>
+          <div class="action-buttons">
+            <a href="/student/jobs" class="btn-small btn-view">
+              <i class="fas fa-search"></i> Browse More Jobs
+            </a>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="empty-container">
+          <div class="empty-icon"><i class="fas fa-times-circle"></i></div>
+          <p>No rejected applications</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <script>
+      function showTab(tabName) {
+        // Hide all tabs
+        const tabs = document.querySelectorAll(".status-group");
+        tabs.forEach((tab) => tab.classList.remove("active"));
+
+        // Remove active from all buttons
+        const buttons = document.querySelectorAll(".tab-button");
+        buttons.forEach((btn) => btn.classList.remove("active"));
+
+        // Show selected tab
+        const selectedTab = document.getElementById(
+          tabName === "applied"
+            ? "applied"
+            : tabName === "shortlisted"
+              ? "shortlisted"
+              : tabName === "selected"
+                ? "selected"
+                : tabName === "rejected"
+                  ? "rejected"
+                  : "all",
+        );
+        if (selectedTab) {
+          selectedTab.classList.add("active");
+        }
+
+        // Add active to clicked button
+        event.target.closest(".tab-button").classList.add("active");
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

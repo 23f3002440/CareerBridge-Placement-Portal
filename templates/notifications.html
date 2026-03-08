@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Notifications</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .container-main {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .header-section {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      }
+
+      .header-title {
+        color: #667eea;
+        font-size: 28px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .header-title i {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        font-size: 24px;
+      }
+
+      .notification-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: start;
+        gap: 15px;
+      }
+
+      .notification-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+      }
+
+      .notification-card.applied {
+        border-left-color: #e3f2fd;
+        background: linear-gradient(to right, rgba(25, 118, 210, 0.05), white);
+      }
+
+      .notification-card.shortlisted {
+        border-left-color: #fff3e0;
+        background: linear-gradient(to right, rgba(245, 127, 0, 0.05), white);
+      }
+
+      .notification-card.selected {
+        border-left-color: #e8f5e9;
+        background: linear-gradient(to right, rgba(56, 142, 60, 0.05), white);
+      }
+
+      .notification-card.rejected {
+        border-left-color: #ffebee;
+        background: linear-gradient(to right, rgba(198, 40, 40, 0.05), white);
+      }
+
+      .notification-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+
+      .notification-card.applied .notification-icon {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .notification-card.shortlisted .notification-icon {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+
+      .notification-card.selected .notification-icon {
+        background: #e8f5e9;
+        color: #388e3c;
+      }
+
+      .notification-card.rejected .notification-icon {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .notification-content {
+        flex: 1;
+      }
+
+      .notification-title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .notification-message {
+        color: #666;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 10px;
+      }
+
+      .notification-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .notification-time {
+        color: #999;
+        font-size: 12px;
+      }
+
+      .notification-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .badge-applied {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+
+      .badge-shortlisted {
+        background: #fff3e0;
+        color: #f57c00;
+      }
+
+      .badge-selected {
+        background: #e8f5e9;
+        color: #388e3c;
+      }
+
+      .badge-rejected {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .empty-container {
+        background: white;
+        border-radius: 12px;
+        padding: 60px 20px;
+        text-align: center;
+        color: #999;
+      }
+
+      .empty-icon {
+        font-size: 56px;
+        margin-bottom: 20px;
+        color: #ddd;
+      }
+
+      .nav-logout {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+
+      .nav-back {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+
+      .btn-small {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-mark-read {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+      }
+
+      .btn-mark-read:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        color: white;
+      }
+
+      @media (max-width: 600px) {
+        .header-title {
+          font-size: 20px;
+        }
+
+        .notification-card {
+          flex-direction: column;
+          align-items: start;
+        }
+
+        .notification-icon {
+          width: 40px;
+          height: 40px;
+          font-size: 18px;
+        }
+
+        .notification-meta {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="nav-back">
+      <a href="/student/dashboard" class="btn btn-outline-light">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </div>
+
+    <div class="nav-logout">
+      <a href="/logout" class="btn btn-outline-light">Logout</a>
+    </div>
+
+    <div class="container-main">
+      <!-- Header Section -->
+      <div class="header-section">
+        <div class="header-title">
+          <i class="fas fa-bell"></i> Notifications
+        </div>
+        <p style="color: #666; margin-top: 10px; font-size: 14px">
+          <i class="fas fa-info-circle"></i> You have {{ notifications|length }}
+          notification(s)
+        </p>
+      </div>
+
+      <!-- Notifications List -->
+      {% if notifications %} {% for notification in notifications %}
+      <div class="notification-card {{ notification.notification_type }}">
+        <div class="notification-icon">
+          {% if notification.notification_type == 'applied' %}
+          <i class="fas fa-paper-plane"></i>
+          {% elif notification.notification_type == 'shortlisted' %}
+          <i class="fas fa-star"></i>
+          {% elif notification.notification_type == 'selected' %}
+          <i class="fas fa-check-circle"></i>
+          {% elif notification.notification_type == 'rejected' %}
+          <i class="fas fa-times-circle"></i>
+          {% endif %}
+        </div>
+
+        <div class="notification-content">
+          <div class="notification-title">{{ notification.title }}</div>
+          <div class="notification-message">{{ notification.message }}</div>
+
+          <div class="notification-meta">
+            <span class="notification-time">
+              <i class="fas fa-clock"></i> {{
+              notification.created_at.strftime('%d %b %Y, %H:%M') }}
+            </span>
+            <span
+              class="notification-badge badge-{{ notification.notification_type }}"
+            >
+              {{ notification.notification_type }}
+            </span>
+            {% if not notification.is_read %}
+            <a
+              href="/student/notification/{{ notification.id }}/read"
+              class="btn-small btn-mark-read"
+            >
+              <i class="fas fa-check"></i> Mark as Read
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %} {% else %}
+      <div class="empty-container">
+        <div class="empty-icon">
+          <i class="fas fa-bell-slash"></i>
+        </div>
+        <p>No notifications yet</p>
+        <p style="color: #aaa; font-size: 13px">
+          You'll receive notifications when companies update your application
+          status
+        </p>
+      </div>
+      {% endif %}
+
+      <!-- Clear Section -->
+      {% if notifications %}
+      <div
+        class="action-buttons"
+        style="justify-content: center; margin-top: 30px"
+      >
+        <a href="/student/dashboard" class="btn-small btn-mark-read">
+          <i class="fas fa-home"></i> Back to Dashboard
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

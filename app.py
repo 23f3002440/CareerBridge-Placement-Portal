@@ -1,6 +1,6 @@
 from flask import Flask, redirect, render_template, request, session
 from functools import wraps
-from models import db,User, StudentProfile,CompanyProfile,JobPosition,Application,Placement
+from models import db,User, StudentProfile,CompanyProfile,JobPosition,Application,Placement,Notification
 # we have created database in models.py hence importing database from it
 from sqlalchemy import and_
 import os
@@ -177,12 +177,6 @@ def admin_dashboard():
                            companies=companies,
                            students=students,
                            jobs=jobs)
-
-
-@app.route("/student/dashboard")
-@student_required
-def student_dashboard():
-    return render_template("student_dashboard.html")
 
 
 @app.route("/company/dashboard")
@@ -421,6 +415,240 @@ def logout():
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+# ================== STUDENT ROUTES ==================
+
+# STUDENT DASHBOARD
+@app.route("/student/dashboard")
+@student_required
+def student_dashboard():
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    
+    if not student_profile:
+        return redirect("/student/profile/edit")
+    
+    # Get statistics
+    total_applications = Application.query.filter_by(student_id=student_profile.id).count()
+    applied = len([a for a in student_profile.applications if a.status == "Applied"])
+    shortlisted = len([a for a in student_profile.applications if a.status == "Shortlisted"])
+    selected = len([a for a in student_profile.applications if a.status == "Selected"])
+    rejected = len([a for a in student_profile.applications if a.status == "Rejected"])
+    
+    # Get recent applications
+    recent_applications = Application.query.filter_by(student_id=student_profile.id).order_by(
+        Application.applied_at.desc()
+    ).limit(5).all()
+    
+    # Get notifications
+    unread_notifications = Notification.query.filter_by(
+        student_id=student_profile.id, is_read=False
+    ).order_by(Notification.created_at.desc()).all()
+    
+    return render_template("student_dashboard.html",
+                          student=student_profile,
+                          total_applications=total_applications,
+                          applied=applied,
+                          shortlisted=shortlisted,
+                          selected=selected,
+                          rejected=rejected,
+                          recent_applications=recent_applications,
+                          unread_notifications=unread_notifications)
+
+
+# VIEW & EDIT STUDENT PROFILE
+@app.route("/student/profile/edit", methods=["GET", "POST"])
+@student_required
+def edit_student_profile():
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    
+    if request.method == "POST":
+        if not student_profile:
+            student_profile = StudentProfile(user_id=user.id, password=user.password)
+        
+        student_profile.roll_no = request.form.get("roll_no", "")
+        student_profile.course = request.form.get("course", "")
+        student_profile.cgpa = float(request.form.get("cgpa", 0))
+        student_profile.graduation_year = int(request.form.get("graduation_year", 0))
+        student_profile.skills = request.form.get("skills", "")
+        student_profile.phone = request.form.get("phone", "")
+        student_profile.address = request.form.get("address", "")
+        student_profile.bio = request.form.get("bio", "")
+        student_profile.github = request.form.get("github", "")
+        student_profile.linkedin = request.form.get("linkedin", "")
+        student_profile.resume_link = request.form.get("resume_link", "")
+        
+        if not student_profile.id:
+            db.session.add(student_profile)
+        db.session.commit()
+        
+        return redirect("/student/dashboard")
+    
+    return render_template("student_profile.html", student=student_profile, user=user)
+
+
+# BROWSE & SEARCH JOBS
+@app.route("/student/jobs")
+@student_required
+def browse_jobs():
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    
+    # Get search parameters
+    search_query = request.args.get("search", "").strip()
+    filter_by = request.args.get("filter", "all")  # all, company, position, skills
+    
+    # Get all approved jobs that are active
+    jobs = JobPosition.query.filter_by(is_approved=True, is_active=True).all()
+    
+    # Apply filters
+    if search_query:
+        if filter_by == "company":
+            jobs = [j for j in jobs if search_query.lower() in j.company.company_name.lower()]
+        elif filter_by == "position":
+            jobs = [j for j in jobs if search_query.lower() in j.title.lower()]
+        elif filter_by == "skills":
+            jobs = [j for j in jobs if search_query.lower() in j.skills.lower()]
+        else:  # all
+            jobs = [j for j in jobs if (search_query.lower() in j.title.lower() or 
+                                       search_query.lower() in j.company.company_name.lower() or
+                                       search_query.lower() in j.skills.lower())]
+    
+    # Get student's applied jobs
+    applied_job_ids = [app.job_id for app in student_profile.applications] if student_profile else []
+    
+    return render_template("job_browse.html",
+                          jobs=jobs,
+                          applied_job_ids=applied_job_ids,
+                          search_query=search_query,
+                          filter_by=filter_by)
+
+
+# VIEW JOB DETAILS & APPLY
+@app.route("/student/job/<int:job_id>")
+@student_required
+def view_job_details(job_id):
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    job = JobPosition.query.get(job_id)
+    
+    if not job or not job.is_approved or not job.is_active:
+        return "Job not found or not available"
+    
+    # Check if already applied
+    application = Application.query.filter_by(
+        student_id=student_profile.id,
+        job_id=job_id
+    ).first()
+    
+    return render_template("job_details.html",
+                          job=job,
+                          student=student_profile,
+                          application=application)
+
+
+# APPLY FOR JOB
+@app.route("/student/job/<int:job_id>/apply", methods=["POST"])
+@student_required
+def apply_job(job_id):
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    job = JobPosition.query.get(job_id)
+    
+    if not job:
+        return "Job not found"
+    
+    # Check if already applied
+    existing_application = Application.query.filter_by(
+        student_id=student_profile.id,
+        job_id=job_id
+    ).first()
+    
+    if existing_application:
+        return redirect(f"/student/job/{job_id}")
+    
+    # Create application
+    application = Application(
+        student_id=student_profile.id,
+        job_id=job_id,
+        status="Applied"
+    )
+    
+    db.session.add(application)
+    
+    # Create notification
+    notification = Notification(
+        student_id=student_profile.id,
+        job_id=job_id,
+        title=f"Application Submitted",
+        message=f"Your application for {job.title} at {job.company.company_name} has been submitted.",
+        notification_type="applied"
+    )
+    
+    db.session.add(notification)
+    db.session.commit()
+    
+    return redirect(f"/student/job/{job_id}")
+
+
+# VIEW MY APPLICATIONS
+@app.route("/student/applications")
+@student_required
+def my_applications():
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    
+    if not student_profile:
+        return redirect("/student/profile/edit")
+    
+    # Get applications sorted by applied date
+    applications = Application.query.filter_by(
+        student_id=student_profile.id
+    ).order_by(Application.applied_at.desc()).all()
+    
+    # Group by status
+    status_groups = {
+        "Applied": [a for a in applications if a.status == "Applied"],
+        "Shortlisted": [a for a in applications if a.status == "Shortlisted"],
+        "Selected": [a for a in applications if a.status == "Selected"],
+        "Rejected": [a for a in applications if a.status == "Rejected"]
+    }
+    
+    return render_template("my_applications.html",
+                          applications=applications,
+                          status_groups=status_groups)
+
+
+# VIEW NOTIFICATIONS
+@app.route("/student/notifications")
+@student_required
+def view_notifications():
+    user = User.query.get(session["user"]["id"])
+    student_profile = StudentProfile.query.filter_by(user_id=user.id).first()
+    
+    if not student_profile:
+        return redirect("/student/profile/edit")
+    
+    notifications = Notification.query.filter_by(
+        student_id=student_profile.id
+    ).order_by(Notification.created_at.desc()).all()
+    
+    return render_template("notifications.html", notifications=notifications)
+
+
+# MARK NOTIFICATION AS READ
+@app.route("/student/notification/<int:notif_id>/read")
+@student_required
+def mark_notification_read(notif_id):
+    notification = Notification.query.get(notif_id)
+    if notification:
+        notification.is_read = True
+        db.session.commit()
+    
+    return redirect("/student/notifications")
+
 
 if __name__ == '__main__':
     app.run(debug=True)

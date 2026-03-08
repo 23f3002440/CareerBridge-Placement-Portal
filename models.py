@@ -22,8 +22,16 @@ class StudentProfile(db.Model):
     cgpa = db.Column(db.Float, nullable=False)
     resume_link = db.Column(db.String(200), nullable=True)
     graduation_year = db.Column(db.Integer, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False,unique=True)
+    skills = db.Column(db.String(500), nullable=True)  # Comma-separated skills
+    phone = db.Column(db.String(20), nullable=True)
+    address = db.Column(db.Text, nullable=True)
+    bio = db.Column(db.Text, nullable=True)
+    github = db.Column(db.String(200), nullable=True)
+    linkedin = db.Column(db.String(200), nullable=True)
+    profile_updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, unique=True)
     applications = db.relationship('Application', backref='student', lazy=True)
+    notifications = db.relationship('Notification', backref='student', lazy=True)
     # creating connection one to one relationship between user and student
 class CompanyProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -68,5 +76,17 @@ class Placement(db.Model):
     application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
     joining_date = db.Column(db.String(50))
     package = db.Column(db.Integer)
+
+class Notification(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student_profile.id'), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('job_position.id'), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    notification_type = db.Column(db.String(50), nullable=False)  # applied, shortlisted, selected, rejected
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=db.func.now())
     
+    job = db.relationship('JobPosition', backref='notifications')
+
     
