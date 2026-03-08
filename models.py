@@ -43,7 +43,7 @@ class JobPosition(db.Model):
     description = db.Column(db.Text)
     salary = db.Column(db.Integer)
     location = db.Column(db.String(100))
-
+    is_approved = db.Column(db.Boolean, default=False)  # Admin approval for job postings
     company_id = db.Column(db.Integer, db.ForeignKey('company_profile.id'), nullable=False)
 
     applications = db.relationship('Application', backref='job', lazy=True)
