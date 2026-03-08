@@ -188,8 +188,46 @@ def student_dashboard():
 @app.route("/company/dashboard")
 @company_required
 def company_dashboard():
-    jobs = JobPosition.query.filter_by(company_id=session["user"]["id"]).all()
-    return render_template("company_dashboard.html", jobs=jobs)
+    # Verify company is approved
+    user = User.query.get(session["user"]["id"])
+    if not user.is_approved:
+        return render_template("company_dashboard.html", approved=False, company=None)
+    
+    # Get company profile
+    company_profile = CompanyProfile.query.filter_by(user_id=user.id).first()
+    if not company_profile:
+        # Create company profile if it doesn't exist
+        company_profile = CompanyProfile(user_id=user.id, company_name=user.name, industry="")
+        db.session.add(company_profile)
+        db.session.commit()
+    
+    # Get all jobs for this company
+    jobs = JobPosition.query.filter_by(company_id=company_profile.id).all()
+    
+    # Calculate statistics
+    total_jobs = len(jobs)
+    active_jobs = len([j for j in jobs if j.is_active])
+    
+    # Get all applications
+    all_applications = []
+    for job in jobs:
+        all_applications.extend(job.applications)
+    
+    total_applications = len(all_applications)
+    shortlisted = len([a for a in all_applications if a.status == "Shortlisted"])
+    selected = len([a for a in all_applications if a.status == "Selected"])
+    rejected = len([a for a in all_applications if a.status == "Rejected"])
+    
+    return render_template("company_dashboard.html",
+                          approved=True,
+                          company=company_profile,
+                          jobs=jobs,
+                          total_jobs=total_jobs,
+                          active_jobs=active_jobs,
+                          total_applications=total_applications,
+                          shortlisted=shortlisted,
+                          selected=selected,
+                          rejected=rejected)
 
 # COMPANY MANAGEMENT
 @app.route("/admin/company/approve/<int:user_id>")
@@ -295,14 +333,23 @@ def deactivate_user(user_id):
 @company_required
 def create_job():
     if request.method == "POST":
+        # Get company profile
+        user = User.query.get(session["user"]["id"])
+        company_profile = CompanyProfile.query.filter_by(user_id=user.id).first()
+        if not company_profile:
+            return "Company profile not found"
+        
         job = JobPosition(
-            company_id=session["user"]["id"],
+            company_id=company_profile.id,
             title=request.form["title"],
             description=request.form.get("description", ""),
-            salary=request.form.get("salary", 0),
+            skills=request.form.get("skills", ""),
+            experience=request.form.get("experience", ""),
+            salary=request.form.get("salary", 0, type=int),
+            salary_max=request.form.get("salary_max", 0, type=int),
             location=request.form.get("location", ""),
             is_active=True,
-            is_approved=False  # optional admin approval
+            is_approved=False  # Requires admin approval
         )
         db.session.add(job)
         db.session.commit()
@@ -314,7 +361,8 @@ def create_job():
 @company_required
 def close_job(job_id):
     job = JobPosition.query.get(job_id)
-    if job and job.company_id == session["user"]["id"]:
+    company_profile = CompanyProfile.query.filter_by(user_id=session["user"]["id"]).first()
+    if job and company_profile and job.company_id == company_profile.id:
         job.is_active = False
         db.session.commit()
     return redirect("/company/dashboard")
@@ -324,26 +372,41 @@ def close_job(job_id):
 @company_required
 def view_applications(job_id):
     job = JobPosition.query.get(job_id)
-    if job and job.company_id == session["user"]["id"]:
+    company_profile = CompanyProfile.query.filter_by(user_id=session["user"]["id"]).first()
+    if job and company_profile and job.company_id == company_profile.id:
         applications = Application.query.filter_by(job_id=job_id).all()
         return render_template("job_applications.html", applications=applications, job=job)
     return "Unauthorized"
 
-# Shortlist / Reject
+# Shortlist Application
 @app.route("/company/application/shortlist/<int:app_id>")
 @company_required
 def shortlist_application(app_id):
     app_obj = Application.query.get(app_id)
-    if app_obj and app_obj.job.company_id == session["user"]["id"]:
+    company_profile = CompanyProfile.query.filter_by(user_id=session["user"]["id"]).first()
+    if app_obj and company_profile and app_obj.job.company_id == company_profile.id:
         app_obj.status = "Shortlisted"
         db.session.commit()
     return redirect(f"/company/job/applications/{app_obj.job_id}")
 
+# Select Application (Accept/Offer)
+@app.route("/company/application/select/<int:app_id>")
+@company_required
+def select_application(app_id):
+    app_obj = Application.query.get(app_id)
+    company_profile = CompanyProfile.query.filter_by(user_id=session["user"]["id"]).first()
+    if app_obj and company_profile and app_obj.job.company_id == company_profile.id:
+        app_obj.status = "Selected"
+        db.session.commit()
+    return redirect(f"/company/job/applications/{app_obj.job_id}")
+
+# Reject Application
 @app.route("/company/application/reject/<int:app_id>")
 @company_required
 def reject_application(app_id):
     app_obj = Application.query.get(app_id)
-    if app_obj and app_obj.job.company_id == session["user"]["id"]:
+    company_profile = CompanyProfile.query.filter_by(user_id=session["user"]["id"]).first()
+    if app_obj and company_profile and app_obj.job.company_id == company_profile.id:
         app_obj.status = "Rejected"
         db.session.commit()
     return redirect(f"/company/job/applications/{app_obj.job_id}")

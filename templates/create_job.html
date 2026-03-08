@@ -2,32 +2,240 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Create Job</title>
+    <title>Post New Job</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #1f4037, #99f2c8);
+            min-height: 100vh;
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
+
+        .form-container {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-title {
+            color: #1f4037;
+            font-weight: bold;
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-subtitle {
+            color: #999;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #1f4037;
+            box-shadow: 0 0 0 3px rgba(31, 64, 55, 0.1);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-hint {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn-post {
+            background: linear-gradient(120deg, #1f4037, #2d6a64);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-post:hover {
+            background: linear-gradient(120deg, #2d6a64, #1f4037);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(31, 64, 55, 0.3);
+        }
+
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #ccc;
+            color: #333;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        .nav-logout {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h2>Post New Job</h2>
-    <form action="/company/job/new" method="POST">
-        <div class="mb-3">
-            <label class="form-label">Job Title</label>
-            <input type="text" class="form-control" name="title" required>
+    <div class="nav-logout">
+        <a href="/logout" class="btn btn-outline-light">Logout</a>
+    </div>
+
+    <div class="form-container">
+        <div class="form-title">
+            <i class="fas fa-briefcase"></i> Post New Job
         </div>
-        <div class="mb-3">
-            <label class="form-label">Required Skills</label>
-            <input type="text" class="form-control" name="skills" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Experience Required</label>
-            <input type="text" class="form-control" name="experience" required>
-        </div>
-        <div class="mb-3">
-            <label class="form-label">Salary</label>
-            <input type="text" class="form-control" name="salary" required>
-        </div>
-        <button type="submit" class="btn btn-success">Post Job</button>
-        <a href="/company/dashboard" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+        <div class="form-subtitle">Fill in the details for your job posting</div>
+
+        <form action="/company/job/new" method="POST">
+            <div class="form-group">
+                <label for="title" class="form-label required-field">Job Title</label>
+                <input 
+                    type="text" 
+                    id="title"
+                    class="form-control" 
+                    name="title" 
+                    placeholder="e.g., Senior Software Engineer"
+                    required>
+                <div class="form-hint">The position you're hiring for</div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">Job Description</label>
+                <textarea 
+                    id="description"
+                    class="form-control" 
+                    name="description" 
+                    placeholder="Describe the job responsibilities, qualifications, and other details..."></textarea>
+                <div class="form-hint">Optional: Provide detailed information about the position</div>
+            </div>
+
+            <div class="form-group">
+                <label for="skills" class="form-label required-field">Required Skills</label>
+                <input 
+                    type="text" 
+                    id="skills"
+                    class="form-control" 
+                    name="skills" 
+                    placeholder="e.g., Python, Django, PostgreSQL"
+                    required>
+                <div class="form-hint">Comma-separated list of required technical skills</div>
+            </div>
+
+            <div class="form-group">
+                <label for="experience" class="form-label required-field">Experience Required</label>
+                <input 
+                    type="text" 
+                    id="experience"
+                    class="form-control" 
+                    name="experience" 
+                    placeholder="e.g., 3-5 years"
+                    required>
+                <div class="form-hint">Required years or level of experience</div>
+            </div>
+
+            <div class="form-group">
+                <label for="location" class="form-label required-field">Location</label>
+                <input 
+                    type="text" 
+                    id="location"
+                    class="form-control" 
+                    name="location" 
+                    placeholder="e.g., Bangalore, India"
+                    required>
+                <div class="form-hint">Job location or work type (e.g., Remote)</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="salary" class="form-label required-field">Salary (Min) LPA</label>
+                    <input 
+                        type="number" 
+                        id="salary"
+                        class="form-control" 
+                        name="salary" 
+                        placeholder="e.g., 10"
+                        step="0.5"
+                        required>
+                    <div class="form-hint">Minimum salary in LPA</div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="salary_max" class="form-label">Salary (Max) LPA</label>
+                    <input 
+                        type="number" 
+                        id="salary_max"
+                        class="form-control" 
+                        name="salary_max" 
+                        placeholder="e.g., 15"
+                        step="0.5">
+                    <div class="form-hint">Maximum salary in LPA (optional)</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-post">
+                    <i class="fas fa-paper-plane"></i> Post Job
+                </button>
+                <a href="/company/dashboard" class="btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

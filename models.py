@@ -41,9 +41,14 @@ class JobPosition(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text)
+    skills = db.Column(db.String(500))  # Required skills
+    experience = db.Column(db.String(100))  # Experience required
     salary = db.Column(db.Integer)
+    salary_max = db.Column(db.Integer)  # Salary range upper limit
     location = db.Column(db.String(100))
+    is_active = db.Column(db.Boolean, default=True)  # Active/Closed status
     is_approved = db.Column(db.Boolean, default=False)  # Admin approval for job postings
+    created_at = db.Column(db.DateTime, default=db.func.now())
     company_id = db.Column(db.Integer, db.ForeignKey('company_profile.id'), nullable=False)
 
     applications = db.relationship('Application', backref='job', lazy=True)
@@ -52,8 +57,9 @@ class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student_profile.id'), nullable=False)
     job_id = db.Column(db.Integer, db.ForeignKey('job_position.id'), nullable=False)
-
-    status = db.Column(db.String(50), default="Applied")
+    status = db.Column(db.String(50), default="Applied")  # Applied, Shortlisted, Selected, Rejected
+    applied_at = db.Column(db.DateTime, default=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     placement = db.relationship('Placement', backref='application', uselist=False)
 
