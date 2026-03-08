@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Students - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Search Students</h2>
+    
+    <!-- Search Form -->
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="query" class="form-control" placeholder="Search by name, roll number, or email" value="{{ request.args.get('query', '') }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <!-- Students Table -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Roll Number</th>
+                <th>Course</th>
+                <th>CGPA</th>
+                <th>Active</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.student_profile.roll_no if student.student_profile else 'N/A' }}</td>
+                <td>{{ student.student_profile.course if student.student_profile else 'N/A' }}</td>
+                <td>{{ student.student_profile.cgpa if student.student_profile else 'N/A' }}</td>
+                <td>{{ "Active" if student.is_active else "Inactive" }}</td>
+                <td>
+                    {% if student.is_active %}
+                    <a href="/admin/user/deactivate/{{ student.id }}" class="btn btn-warning btn-sm mb-1">Deactivate</a>
+                    {% else %}
+                    <a href="/admin/user/reactivate/{{ student.id }}" class="btn btn-success btn-sm mb-1">Reactivate</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="/admin/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+</body>
+</html>

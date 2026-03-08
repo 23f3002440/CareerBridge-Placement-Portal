@@ -9,6 +9,14 @@
 <div class="container mt-5">
     <h2>Admin Dashboard</h2>
     
+    <!-- Navigation Links -->
+    <div class="mb-4">
+        <a href="/admin/students" class="btn btn-primary me-2">Search Students</a>
+        <a href="/admin/companies" class="btn btn-primary me-2">Search Companies</a>
+        <a href="/admin/applications" class="btn btn-primary me-2">View Applications</a>
+        <a href="/logout" class="btn btn-secondary">Logout</a>
+    </div>
+    
     <!-- Summary Cards -->
     <div class="row mb-4">
         <div class="col-md-2"><div class="card p-3 bg-primary text-white">Total Companies: {{ total_companies }}</div></div>
@@ -16,6 +24,7 @@
         <div class="col-md-2"><div class="card p-3 bg-success text-white">Total Students: {{ total_students }}</div></div>
         <div class="col-md-2"><div class="card p-3 bg-info text-white">Total Jobs: {{ total_jobs }}</div></div>
         <div class="col-md-2"><div class="card p-3 bg-danger text-white">Pending Jobs: {{ pending_jobs }}</div></div>
+        <div class="col-md-2"><div class="card p-3 bg-secondary text-white">Total Applications: {{ total_applications }}</div></div>
     </div>
 
     <!-- Companies Table -->
@@ -80,6 +89,38 @@
                     <a href="/admin/user/deactivate/{{ student.id }}" class="btn btn-warning btn-sm mb-1">Deactivate</a>
                     {% else %}
                     <a href="/admin/user/reactivate/{{ student.id }}" class="btn btn-success btn-sm mb-1">Reactivate</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Jobs Table -->
+    <h4>Job Postings</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Approved</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.id }}</td>
+                <td>{{ job.title }}</td>
+                <td>{{ job.company.company_name if job.company else 'N/A' }}</td>
+                <td>{{ job.location }}</td>
+                <td>{{ "Yes" if job.is_approved else "No" }}</td>
+                <td>
+                    {% if not job.is_approved %}
+                    <a href="/admin/job/approve/{{ job.id }}" class="btn btn-success btn-sm mb-1">Approve</a>
+                    <a href="/admin/job/reject/{{ job.id }}" class="btn btn-danger btn-sm mb-1">Reject</a>
                     {% endif %}
                 </td>
             </tr>
