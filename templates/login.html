@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Login - CareerBridge{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Login</h2>
+
+          <form method="POST">
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" name="username" required />
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-control" name="password" required />
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+          </form>
+
+          <hr />
+
+          <p class="text-center">Don't have an account?</p>
+
+          <a href="/register/student" class="btn btn-success w-100 mb-2">
+            Register as Student
+          </a>
+
+          <a href="/register/company" class="btn btn-warning w-100">
+            Register as Company
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+
+/* Only login page background */
+
+
+
+
+.navbar{
+position: fixed;
+top:0;
+width:100%;
+z-index:1000;
+}
+
+/* push login form below navbar */
+
+.container{
+margin-top:100px;
+}
+
+</style>
+
+
+
+{% endblock %}

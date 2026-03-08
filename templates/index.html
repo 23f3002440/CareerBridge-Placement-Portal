@@ -3,10 +3,32 @@
 {% block title %}Home - CareerBridge{% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1>Welcome to CareerBridge</h1>
-    <a href="/login" class="btn btn-primary">Login</a>
-    <a href="/register/student" class="btn btn-success">Register as Student</a>
-    <a href="/register/company" class="btn btn-warning">Register as Company</a>
+
+<div class="home-container">
+
+    <div class="welcome-box text-center">
+
+        <h1 class="title">CareerBridge</h1>
+        <p class="subtitle">Connecting Students with Career Opportunities</p>
+
+        <div class="button-group mt-4">
+
+            <a href="/login" class="btn btn-primary btn-lg custom-btn">
+                Login
+            </a>
+
+            <a href="/register/student" class="btn btn-success btn-lg custom-btn">
+                Student Register
+            </a>
+
+            <a href="/register/company" class="btn btn-warning btn-lg custom-btn">
+                Company Register
+            </a>
+
+        </div>
+
+    </div>
+
 </div>
+
 {% endblock %}

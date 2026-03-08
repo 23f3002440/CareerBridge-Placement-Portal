@@ -262,7 +262,7 @@ def search_companies():
 # VIEW ALL APPLICATIONS
 @app.route("/admin/applications")
 @admin_required
-def view_applications():
+def admin_view_applications():
     applications = Application.query.all()
     return render_template("admin_applications.html", applications=applications)
 
