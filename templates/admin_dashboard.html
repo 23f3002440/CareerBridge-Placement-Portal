@@ -1,0 +1,4 @@
+{% for company in companies %}
+<p>{{ company.username }}</p>
+<a href="/approve/{{ company.id }}">Approve</a>
+{% endfor %}

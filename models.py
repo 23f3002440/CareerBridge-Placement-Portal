@@ -1,18 +1,19 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    role = db.Column(db.String(50), nullable=False)
-    is_active =  db.Column(db.Boolean, default=True)
-    is_approved = db.Column(db.Boolean, default=False)
-    
-    #relationship with student profile
-    student_profile = db.relationship('StudentProfile', backref='user', uselist=False,lazy = True)
-    company_profile = db.relationship('CompanyProfile', backref='user', uselist=False, lazy= True)
-    
+    password = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(20), nullable=False)  # admin, student, company
+    is_active = db.Column(db.Boolean, default=True)
+    is_approved = db.Column(db.Boolean, default=False)  # For company approval
+
+    # One-to-one relationships
+    student_profile = db.relationship('StudentProfile', backref='user', uselist=False, lazy='select')
+    company_profile = db.relationship('CompanyProfile', backref='user', uselist=False, lazy='select')
 class StudentProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     roll_no = db.Column(db.String(20), unique=True, nullable=False)
