@@ -49,8 +49,47 @@ Students can create profiles, apply for jobs, and track their application progre
   
 
 ---
+## 📂 Project Structure
 
-
+```
+CareerBridge-Placement-Portal
+│
+├── app.py                 # Main Flask application entry point
+├── config.py              # Application configuration settings
+├── models.py              # SQLAlchemy database models
+├── reset_db.py            # Script to reset and initialize the database
+├── requirements.txt       # Python dependencies
+├── README.md              # Project documentation
+├── .gitignore             # Files ignored by Git
+│
+├── static                 # Static assets
+│   ├── style.css          # Main stylesheet
+│   └── images             # Images used in the application
+│
+├── templates              # Jinja2 HTML templates
+│   ├── base.html
+│   ├── index.html
+│   ├── login.html
+│   ├── admin_dashboard.html
+│   ├── admin_students.html
+│   ├── admin_companies.html
+│   ├── admin_applications.html
+│   ├── register_student.html
+│   ├── register_company.html
+│   ├── student_dashboard.html
+│   ├── student_profile.html
+│   ├── job_browse.html
+│   ├── job_details.html
+│   ├── my_applications.html
+│   ├── notifications.html
+│   ├── company_dashboard.html
+│   ├── create_job.html
+│   └── job_applications.html
+│
+└── instance
+    └── database.sqlite    # SQLite database file
+```
+---
 ## 🖥️ Live Demo
 
 You can use the app at:  
