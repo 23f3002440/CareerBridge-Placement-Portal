@@ -5,6 +5,7 @@ from models import db,User, StudentProfile,CompanyProfile,JobPosition,Applicatio
 from sqlalchemy import and_
 import os
 
+# Initialize Flask application
 app = Flask(__name__)
 #create main Flask app object
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,11 +17,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'your_secret_key_here'  # Change this to a secure key in production
 db.init_app(app)
 
-# Ensure instance folder exists
+# Ensure required directories exist
 os.makedirs(os.path.join(basedir, 'instance'), exist_ok=True)
 
-# DECORATOR FOR COMPANY ROUTES
+# ==================== AUTHENTICATION DECORATORS ====================
+
 def company_required(f):
+    """
+    Decorator to restrict route access to authenticated company users only.
+    Redirects to login page if user is not authenticated or lacks company role.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session or session['user'].get('role') != 'company':
@@ -28,8 +34,12 @@ def company_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# DECORATOR FOR STUDENT ROUTES
+
 def student_required(f):
+    """
+    Decorator to restrict route access to authenticated student users only.
+    Redirects to login page if user is not authenticated or lacks student role.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session or session['user'].get('role') != 'student':
@@ -39,6 +49,10 @@ def student_required(f):
 
 # DECORATOR FOR ADMIN ROUTES
 def admin_required(f):
+    """
+    Decorator to restrict route access to authenticated admin users only.
+    Redirects to login page if user is not authenticated or lacks admin role.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session or session['user'].get('role') != 'admin':
@@ -110,10 +124,15 @@ def register_student():
 
     return render_template("register_student.html", error=error)
 
-
 # COMPANY REGISTRATION
-@app.route("/register/company", methods=["GET","POST"])
+@app.route("/register/company", methods=["GET", "POST"])
 def register_company():
+    """
+    Company registration endpoint.
+    
+    Allows new companies to register for job posting access. 
+    Accounts require admin approval before becoming active.
+    """
     error = None
     success = None
     
