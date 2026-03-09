@@ -54,7 +54,7 @@ with app.app_context():
     if not admin:
         admin = User(
             name="admin", 
-            email="admin@example.com",
+            email="admin123@gmail.com",  # updated per request
             password="admin123",
             role="admin",
             is_approved=True,
@@ -168,9 +168,13 @@ def login():
         password = request.form.get("password", "").strip()
 
         if not name or not password:
-            error = "Username and password are required"
+            error = "Username/email and password are required"
         else:
-            user = User.query.filter(and_(User.name==name, User.password==password)).first()
+            # allow login by username or email
+            if "@" in name:
+                user = User.query.filter(and_(User.email==name, User.password==password)).first()
+            else:
+                user = User.query.filter(and_(User.name==name, User.password==password)).first()
             
             if user:
                 if not user.is_active:
@@ -192,7 +196,7 @@ def login():
                     elif user.role == "company":
                         return redirect("/company/dashboard")
             else:
-                error = "Invalid username or password"
+                error = "Invalid username/email or password"
 
     return render_template("login.html", error=error)
 
