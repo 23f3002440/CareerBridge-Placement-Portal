@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: CareerBridge Placement Portal API
+  description: API endpoints for the Placement Portal Application
+  version: 1.0.0
+
+paths:
+
+  /login:
+    post:
+      summary: Authenticate user
+      description: Allows Admin, Company, or Student to login
+      responses:
+        '200':
+          description: Login successful
+
+  /register/student:
+    post:
+      summary: Register a new student
+      description: Creates a new student account
+      responses:
+        '201':
+          description: Student registered successfully
+
+  /register/company:
+    post:
+      summary: Register a new company
+      description: Creates a company profile awaiting admin approval
+      responses:
+        '201':
+          description: Company registered successfully
+
+  /admin/dashboard:
+    get:
+      summary: Admin dashboard
+      description: View statistics about students, companies, and placement drives
+      responses:
+        '200':
+          description: Dashboard data returned
+
+  /jobs:
+    get:
+      summary: View placement drives
+      description: Fetch all approved placement drives
+      responses:
+        '200':
+          description: List of placement drives
+
+  /apply/{job_id}:
+    post:
+      summary: Apply for job
+      description: Student applies for a placement drive
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Application submitted
+
+  /applications:
+    get:
+      summary: View applications
+      description: Retrieve applications for a specific drive or student
+      responses:
+        '200':
+          description: Application list returned
+
+  /update_status:
+    post:
+      summary: Update application status
+      description: Company updates student application status
+      responses:
+        '200':
+          description: Status updated successfully
