@@ -326,9 +326,13 @@ def deactivate_user(user_id):
 @app.route("/company/job/new", methods=["GET", "POST"])
 @company_required
 def create_job():
+    # Verify company is approved
+    user = User.query.get(session["user"]["id"])
+    if not user.is_approved:
+        return "Your company is not approved yet. Please wait for admin approval."
+    
     if request.method == "POST":
         # Get company profile
-        user = User.query.get(session["user"]["id"])
         company_profile = CompanyProfile.query.filter_by(user_id=user.id).first()
         if not company_profile:
             return "Company profile not found"
