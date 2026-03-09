@@ -316,16 +316,52 @@
           <div class="form-group">
             <label class="form-label">Search By</label>
             <select class="form-select" name="filter">
-              <option value="all" {% if filter_by == "all" %}selected{% endif %}>
+              <option
+                value="all"
+                {%
+                if
+                filter_by=""
+                ="all"
+                %}selected{%
+                endif
+                %}
+              >
                 All
               </option>
-              <option value="position" {% if filter_by == "position" %}selected{% endif %}>
+              <option
+                value="position"
+                {%
+                if
+                filter_by=""
+                ="position"
+                %}selected{%
+                endif
+                %}
+              >
                 Position
               </option>
-              <option value="company" {% if filter_by == "company" %}selected{% endif %}>
+              <option
+                value="company"
+                {%
+                if
+                filter_by=""
+                ="company"
+                %}selected{%
+                endif
+                %}
+              >
                 Company
               </option>
-              <option value="skills" {% if filter_by == "skills" %}selected{% endif %}>
+              <option
+                value="skills"
+                {%
+                if
+                filter_by=""
+                ="skills"
+                %}selected{%
+                endif
+                %}
+              >
                 Skills
               </option>
             </select>

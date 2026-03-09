@@ -1,4 +1,11 @@
 Flask==3.0.0
+# python web framework to build web applications
 Flask-SQLAlchemy==3.1.1
+# extension for flask 
+# integrate SQLALchemy with flask applications
 SQLAlchemy==2.0.48
+# ORM - OBJECT RELATIONAL MAPPER 
+# INTERACT WITH DATABASES USING PYTHON CLASSES AND OBJECTS INSTEAD OF WRITING RAW SQL QUERIES
 Werkzeug==3.0.1
+# SECRUTIY AND PASSWORD HASHING
+# REQUEST RESPONSE HANDLING
