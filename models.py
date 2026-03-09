@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-
+# package - flask_sqlalchemy
+# class - SQLAlchemy
 db = SQLAlchemy()
-
+# create database instance named db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)

@@ -5,6 +5,7 @@ from app import db, app, User
 with app.app_context():
     # List all users
     users = User.query.all()
+    # retrieve all users from the database and print their details
     print("Existing users:")
     for user in users:
         print(f"  {user.role}: {user.name} ({user.email}) - Active: {user.is_active}, Approved: {user.is_approved}")
@@ -37,3 +38,9 @@ with app.app_context():
         print("  Email: admin@careerbridge.com")
         print("  Password: admin123")
         print("  Login at: http://localhost:5000/login")
+        
+        
+        # create if admin is missing
+        # reset admin password
+        # check if admin exists
+        # show existing users
