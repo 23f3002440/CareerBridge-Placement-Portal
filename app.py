@@ -68,87 +68,133 @@ with app.app_context():
 # STUDENT REGISTRATION
 @app.route("/register/student", methods=["GET","POST"])
 def register_student():
+    error = None
     if request.method == "POST":
         name = request.form["username"]
         password = request.form["password"]
-        email = request.form.get("email", f"{name}@student.example.com")
+        email = request.form.get("email", "").strip()
+        
+        # Validation
+        if not name or not password:
+            error = "Username and password are required"
+        elif len(password) < 4:
+            error = "Password must be at least 4 characters long"
+        elif not email:
+            error = "Email is required"
+        else:
+            # Check if user already exists
+            existing_user = User.query.filter_by(name=name).first()
+            if existing_user:
+                error = "Username already exists. Please choose a different username."
+            else:
+                existing_email = User.query.filter_by(email=email).first()
+                if existing_email:
+                    error = "Email already registered. Please use a different email."
+                else:
+                    try:
+                        student = User(
+                            name=name,
+                            email=email,
+                            password=password,
+                            role="student",
+                            is_approved=True,  # students approved immediately
+                            is_active=True
+                        )
 
-        student = User(
-            name=name,
-            email=email,
-            password=password,
-            role="student",
-            is_approved=True,  # students approved immediately
-            is_active=True
-        )
+                        db.session.add(student)
+                        db.session.commit()
+                        return redirect("/login")
+                    except Exception as e:
+                        db.session.rollback()
+                        error = f"Registration failed: {str(e)}"
 
-        db.session.add(student)
-        db.session.commit()
-
-        return redirect("/login")
-
-    return render_template("register_student.html")
+    return render_template("register_student.html", error=error)
 
 
 # COMPANY REGISTRATION
 @app.route("/register/company", methods=["GET","POST"])
 def register_company():
-
+    error = None
+    success = None
+    
     if request.method == "POST":
         name = request.form["username"]
         password = request.form["password"]
-        email = request.form.get("email", f"{name}@company.example.com")
+        email = request.form.get("email", "").strip()
+        
+        # Validation
+        if not name or not password:
+            error = "Company name and password are required"
+        elif len(password) < 4:
+            error = "Password must be at least 4 characters long"
+        elif not email:
+            error = "Email is required"
+        else:
+            # Check if user already exists
+            existing_user = User.query.filter_by(name=name).first()
+            if existing_user:
+                error = "Company name already exists. Please choose a different name."
+            else:
+                existing_email = User.query.filter_by(email=email).first()
+                if existing_email:
+                    error = "Email already registered. Please use a different email."
+                else:
+                    try:
+                        company = User(
+                            name=name,
+                            email=email,
+                            password=password,
+                            role="company",
+                            is_approved=False,
+                            is_active=True
+                        )
 
-        company = User(
-            name=name,
-            email=email,
-            password=password,
-            role="company",
-            is_approved=False,
-            is_active=True
-        )
+                        db.session.add(company)
+                        db.session.commit()
+                        success = "Registration successful! Waiting for admin approval. Please login after approval."
+                    except Exception as e:
+                        db.session.rollback()
+                        error = f"Registration failed: {str(e)}"
 
-        db.session.add(company)
-        db.session.commit()
-
-        return "Waiting for admin approval. Please login after approval."
-
-    return render_template("register_company.html")
+    return render_template("register_company.html", error=error, success=success)
 
 
 # LOGIN SYSTEM
 @app.route("/login", methods=["GET","POST"])
 def login():
+    error = None
     if request.method == "POST":
-        name = request.form["username"]
-        password = request.form["password"]
+        name = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
 
-        user = User.query.filter(and_(User.name==name, User.password==password)).first()
-        
-        if user:
-            if not user.is_active:
-                return "User account has been deactivated"
+        if not name or not password:
+            error = "Username and password are required"
+        else:
+            user = User.query.filter(and_(User.name==name, User.password==password)).first()
             
-            session['user'] = {
-                'id': user.id,
-                'name': user.name,
-                'email': user.email,
-                'role': user.role
-            }
-            
-            if user.role == "admin":
-                return redirect("/admin/dashboard")
-            elif user.role == "student":
-                return redirect("/student/dashboard")
-            elif user.role == "company":
-                if user.is_approved:
-                    return redirect("/company/dashboard")
+            if user:
+                if not user.is_active:
+                    error = "Your account has been deactivated. Please contact support."
+                elif user.role == "company" and not user.is_approved:
+                    error = "Your company account is pending admin approval. Please wait."
                 else:
-                    return "Company waiting for admin approval"
+                    session['user'] = {
+                        'id': user.id,
+                        'name': user.name,
+                        'email': user.email,
+                        'role': user.role
+                    }
+                    
+                    if user.role == "admin":
+                        return redirect("/admin/dashboard")
+                    elif user.role == "student":
+                        return redirect("/student/dashboard")
+                    elif user.role == "company":
+                        return redirect("/company/dashboard")
+            else:
+                error = "Invalid username or password"
 
-        return "Invalid login"
-
-    return render_template("login.html")
+    return render_template("login.html", error=error)
 
 
 # ROLE BASED DASHBOARDS
