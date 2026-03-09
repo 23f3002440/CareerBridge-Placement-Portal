@@ -571,7 +571,7 @@ def browse_jobs():
                                        search_query.lower() in j.skills.lower())]
     
     # Get student's applied jobs
-    applied_job_ids = [app.job_id for app in student_profile.applications] if student_profile else []
+    applied_job_ids = [application.job_id for application in student_profile.applications] if student_profile else []
     
     return render_template("job_browse.html",
                           jobs=jobs,
