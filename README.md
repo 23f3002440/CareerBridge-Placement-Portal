@@ -60,6 +60,7 @@ CareerBridge-Placement-Portal
 ├── reset_db.py            # Script to reset and initialize the database
 ├── requirements.txt       # Python dependencies
 ├── README.md              # Project documentation
+├── PROJECT REPORT         # Modern Application Development 1 Report
 ├── .gitignore             # Files ignored by Git
 │
 ├── static                 # Static assets
@@ -88,6 +89,7 @@ CareerBridge-Placement-Portal
 │
 └── instance
     └── database.sqlite    # SQLite database file
+
 ```
 ---
 ## 🖥️ Live Demo
