@@ -29,7 +29,7 @@ Companies can post job openings, shortlist candidates, and update recruitment st
 Students can create profiles, apply for jobs, and track their application progress in real time.
 
 ---
-🔹 Benefits:
+## 🌟 Benefits:
 
 -Efficient recruitment management<br>
 -Faster communication<br>
