@@ -54,39 +54,41 @@ Students can create profiles, apply for jobs, and track their application progre
 ```
 CareerBridge-Placement-Portal
 │
-├── app.py                 # Main Flask application entry point
-├── config.py              # Application configuration settings
-├── models.py              # SQLAlchemy database models
-├── reset_db.py            # Script to reset and initialize the database
-├── requirements.txt       # Python dependencies
-├── README.md              # Project documentation
-├── PROJECT REPORT         # Modern Application Development 1 Report
-├── .gitignore             # Files ignored by Git
+├── static
+│   ├── style.css
+│   └── images
 │
-├── static                 # Static assets
-│   ├── style.css          # Main stylesheet
-│   └── images             # Images used in the application
-│
-├── templates              # Jinja2 HTML templates
-│   ├── base.html
-│   ├── index.html
-│   ├── login.html
+├── templates
+│   ├── admin_applications.html
+│   ├── admin_companies.html
 │   ├── admin_dashboard.html
 │   ├── admin_students.html
-│   ├── admin_companies.html
-│   ├── admin_applications.html
-│   ├── register_student.html
-│   ├── register_company.html
-│   ├── student_dashboard.html
-│   ├── student_profile.html
-│   ├── job_browse.html
-│   ├── job_details.html
-│   ├── my_applications.html
-│   ├── notifications.html
+│   ├── base.html
 │   ├── company_dashboard.html
 │   ├── create_job.html
-│   └── job_applications.html
+│   ├── index.html
+│   ├── job_applications.html
+│   ├── job_browse.html
+│   ├── job_details.html
+│   ├── login.html
+│   ├── my_applications.html
+│   ├── notifications.html
+│   ├── register_company.html
+│   ├── register_student.html
+│   ├── student_dashboard.html
+│   └── student_profile.html
 │
+├── app.py
+├── config.py
+├── create_admin.py
+├── models.py
+├── reset_db.py
+├── test_admin.py
+├── requirements.txt
+├── api.yaml
+├── README.md
+├── .gitignore
+└── MODERN APPLICATION DEVELOPMENT 1.pdf
 └── instance
     └── database.sqlite    # SQLite database file
 
