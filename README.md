@@ -96,11 +96,12 @@ CareerBridge-Placement-Portal
 ---
 ## 🖥️ Live Demo
 
-You can use the app at:  
-👉 [https://vehicle-parking-app-v1-jnm1.onrender.com/](https://vehicle-parking-app-v1-jnm1.onrender.com/)
+You can see the video report at:  
+👉 https://drive.google.com/file/d/1EEa2k_VXElF8WaEQ03zhklTGXlcXfJ-Q/view?usp=sharing
 
-> ⚠️ **Note:**  
-> As the app is deployed on Render's free tier, it may take 10-15 minutes to wake up from sleep mode if there's no recent traffic! Please be patient after clicking the link.
+You can see the project report at:  
+👉 https://drive.google.com/file/d/1h2OE5ty6Xd2UgRzsw8shJpWHpBZIs-l9/view?usp=sharing
+
 
 ---
 
