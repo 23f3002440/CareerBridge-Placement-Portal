@@ -105,6 +105,80 @@ You can see the project report 📋 at:
 
 ---
 
+## ⚙️ Setup from Scratch
+
+### Step 1: Install Python
+Make sure Python 3.8+ is installed.
+```
+python --version
+```
+
+### Step 2: Create a virtual environment (recommended)
+```bash
+cd placement_portal
+python -m venv venv
+
+# Activate:
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+```
+
+### Step 3: Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Step 4: Run the app
+```bash
+python app.py
+```
+
+The app will:
+- Auto-create the `placement.db` SQLite database
+- Seed the admin user automatically
+- Start at: **http://127.0.0.1:5000**
+
+---
+
+## 🔐 Default Login Credentials
+
+| Role  | Username / Email     | Password   |
+|-------|----------------------|------------|
+| Admin | `admin`              | `admin123` |
+
+---
+
+## 🚀 How to Use (Demo Flow)
+
+### 1. Admin Setup
+1. Go to http://127.0.0.1:5000/login
+2. Select role = **Admin**, username = `admin`, password = `admin123`
+3. You land on the admin dashboard
+
+### 2. Register a Company
+1. Open an incognito tab, go to /register/company
+2. Fill in details and submit
+3. Back in admin → **Companies** → Approve the company
+
+### 3. Company Posts a Drive
+1. Login as the company
+2. Click **Post New Drive**, fill details, submit
+3. Back in admin → **Drives** → Approve the drive
+
+### 4. Student Registers and Applies
+1. Go to /register/student
+2. Login as student
+3. Dashboard shows available drives → click **Apply**
+4. Track status in real-time
+
+### 5. Company Shortlists
+1. Login as company → View Applications
+2. Change status to Shortlisted / Selected / Rejected via dropdown
+
+---
+
 
 ## ✨ Roles & Functionalities
 
