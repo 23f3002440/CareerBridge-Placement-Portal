@@ -96,10 +96,10 @@ CareerBridge-Placement-Portal
 ---
 ## 🖥️ Live Demo
 
-You can see the video report at:  
+You can see the video report 📹 at: <br>
 👉 https://drive.google.com/file/d/1EEa2k_VXElF8WaEQ03zhklTGXlcXfJ-Q/view?usp=sharing
 
-You can see the project report at:  
+You can see the project report 📋 at:  
 👉 https://drive.google.com/file/d/1h2OE5ty6Xd2UgRzsw8shJpWHpBZIs-l9/view?usp=sharing
 
 
