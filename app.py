@@ -1,10 +1,20 @@
+from concurrent.interpreters import create
+
 from flask import Flask, redirect, render_template, request, session
-from functools import wraps
+# redirect - sends user to another page 
+# flask - create web application 
+#render_template → Shows an HTML page to the user.
+
+# request → Gets data sent by the user (like form data).
+
+# session → Stores user login data temporarily.
+from functools import wraps 
+# create decorates-special behaviour
 from models import db,User, StudentProfile,CompanyProfile,JobPosition,Application,Placement,Notification
 # we have created database in models.py hence importing database from it
 from sqlalchemy import and_
 import os
-
+# work with files and system
 # Initialize Flask application
 app = Flask(__name__)
 #create main Flask app object
